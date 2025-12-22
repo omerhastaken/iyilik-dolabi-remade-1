@@ -1,0 +1,160 @@
+/* 🎨 Genel Sayfa Ayarları */
+body {
+  margin: 0; /* Sayfa kenar boşluklarını sıfırlar */
+  font-family: 'Arial', sans-serif; /* Genel yazı tipi */
+  background-color: #fff8f0; /* Yumuşak açık arka plan rengi */
+}
+
+/* 🌈 NAVBAR (Üst Menü Alanı) */
+.navbar {
+  display: flex; /* İçerikleri yatay hizalar */
+  justify-content: space-between; /* Elemanlar arasında boşluk bırakır */
+  align-items: center; /* Dikey ortalama yapar */
+  padding: 15px 30px; /* İç boşluk */
+  background: linear-gradient(to right, #5b433c, #2f2e2e); /* Şık koyu degrade renk geçişi */
+}
+
+/* 🌸 Logo Stili */
+.logo {
+  font-size: 28px; /* Yazı boyutu */
+  color: #fff; /* Beyaz renk */
+  font-weight: bold; /* Kalın yazı */
+}
+
+/* 🔍 Arama Kutusu Alanı */
+.search-container {
+  position: relative; /* İkonun konumlandırılması için relative */
+  flex: 1; /* Ortadaki alanı kaplar */
+  max-width: 400px; /* Maksimum genişlik */
+  margin: 0 20px; /* Yan boşluk */
+}
+
+/* 🔍 Arama Kutusu Input Alanı */
+.search-container input {
+  width: 100%;
+  padding: 8px 35px 8px 10px; /* Sağ tarafa ikon boşluğu ekliyoruz */
+  border-radius: 25px; /* Yuvarlatılmış köşeler */
+  border: none; /* Kenarlık yok */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3); /* Hafif gölge efekti */
+}
+
+/* 🔎 Arama İkonu */
+.search-container .search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%); /* Dikey ortalama */
+  color: #5d4037; /* Kahverengi ton */
+}
+
+/* 🧭 NAVBAR Linkleri */
+.nav-links a {
+  margin-left: 20px;
+  text-decoration: none; /* Alt çizgi yok */
+  color: #fff; /* Beyaz yazı */
+  font-weight: bold;
+  display: inline-flex; /* İkon ve yazıyı yan yana dizer */
+  align-items: center;
+}
+
+/* 🔗 İkon ile Yazı Arasındaki Boşluk */
+.nav-links a svg {
+  margin-right: 5px;
+}
+
+/* 💛 Banner Alanı (Üst Görsel Yazı Alanı) */
+.banner {
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(to right, #efebe9, #5d5943); /* Açık-koyu renk geçişi */
+  margin: 20px;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 💬 Banner Başlığı */
+.banner h2 {
+  font-size: 36px;
+  color: #3f2f2a;
+  margin-bottom: 10px;
+}
+
+/* 💬 Banner Alt Yazısı */
+.banner p {
+  font-size: 18px;
+  color: #6d4c41;
+}
+
+/* 🛍️ Ürünler Alanı (Grid yapısı) */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Otomatik sütun sistemi */
+  gap: 20px; /* Kartlar arası boşluk */
+  padding: 20px;
+}
+
+/* 📦 Ürün Kartı */
+.product-card {
+  background: #443c3a; /* Koyu kahve tonlu arka plan */
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Derinlik hissi veren gölge */
+  transition: transform 0.2s; /* Hover animasyonu */
+}
+
+/* 📦 Hover (Üzerine gelince hafif yukarı kalkma efekti) */
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+/* 🖼️ Ürün Görseli */
+.product-card img {
+  width: 100%;
+  height: 150px;
+  border-radius: 10px;
+}
+
+/* 🏷️ Ürün Adı */
+.product-card h3 {
+  color: #fff;
+  margin: 10px 0 5px;
+}
+
+/* 📝 Ürün Açıklaması */
+.product-card p {
+  color: #d7ccc8;
+  font-size: 14px;
+  margin: 0 0 5px;
+}
+
+/* 🛒 Ürün Eylemleri Alanı */
+.product-actions {
+  display: flex;
+  justify-content: space-between; /* Düğme ve kalp arasında boşluk */
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* 🛒 Sepete Ekle Butonu */
+.product-actions button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 20px;
+  background-color: #2b2929;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* 💖 Favori (Kalp) İkonu */
+.favorite-icon {
+  font-size: 22px;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* 💕 Favori Aktif Hali (Kalp Dolu Gibi Görünür) */
+.favorite-icon.active {
+  color: #63615e;
+}

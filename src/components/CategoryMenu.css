@@ -1,0 +1,76 @@
+/* -------------------- KATEGORİLER MENÜSÜ -------------------- */
+
+/* Hamburger Menü İkonu */
+/* Menü ikonunu (☰) temsil eder. Fare üzerine gelince büyüme animasyonu vardır. */
+.hamburger-menu {
+  font-size: 26px; /* İkon boyutu */
+  color: #fff; /* Beyaz renk */
+  cursor: pointer; /* Tıklanabilir */
+  margin-left: 15px; 
+  z-index: 9999; 
+  transition: transform 0.2s ease; /* Hover animasyonu */
+}
+
+.hamburger-menu:hover {
+  transform: scale(1.1); /* Hover efekti */
+}
+
+/* Kategori Paneli */
+/* Sol tarafta gizli, açıldığında görünür. Panel arka planı koyu kahverengi ve gölgeli */
+.category-panel {
+  position: fixed; /* Ekrana sabit */
+  top: 0;
+  left: -270px; /* Başlangıçta gizli */
+  width: 250px;
+  height: 100%;
+  background-color: #3e2e2e; /* Koyu kahverengi */
+  color: white; 
+  padding: 20px;
+  transition: left 0.3s ease; /* Açılıp kapanma animasyonu */
+  box-shadow: 3px 0 10px rgba(0,0,0,0.3); /* Gölgeli görünüm */
+  z-index: 9998;
+}
+
+/* Panel Açıkken Konum */
+.category-panel.open {
+  left: 0; /* Panel görünür olur */
+}
+
+/* Panel Başlığı ve Kapatma Butonu */
+.category-header {
+  display: flex;
+  justify-content: space-between; /* Başlık ve kapatma ikonunu hizalar */
+  align-items: center;
+}
+
+.category-header h3 {
+  margin: 0;
+  font-size: 20px; /* Başlık boyutu */
+}
+
+/* Kapatma İkonu */
+.close-icon {
+  cursor: pointer; /* Tıklanabilir */
+  font-size: 22px;
+}
+
+/* Kategori Listesi */
+.category-panel ul {
+  list-style: none; /* Madde işareti yok */
+  padding: 0;
+  margin-top: 20px;
+}
+
+/* Kategori Öğeleri */
+.category-panel li {
+  padding: 10px 0;
+  border-bottom: 1px solid #6d4c41; /* Alt çizgi */
+  cursor: pointer; /* Tıklanabilir */
+  transition: color 0.2s; /* Hover efekti */
+}
+
+/* Hover Efekti */
+/* Fare üzerine gelince yazı rengi değişir. İsteğe bağlı ama şık görünüm için önerilir */
+.category-panel li:hover {
+  color: #ffcc80; 
+}

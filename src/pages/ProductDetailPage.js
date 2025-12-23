@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db, auth } from "./firebase";
+import { db, auth } from "../firebase";
+import styled from "styled-components";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -54,36 +55,56 @@ export default function ProductDetailPage() {
   if (!product) return <p>Ürün bulunamadı</p>;
 
   return (
-    <div style={{ padding: 20 }}>
+    <Container>
       {product.images?.[0] && (
-        <img
-          src={product.images[0]}
-          alt={product.name}
-          style={{ width: "100%", borderRadius: 12 }}
-        />
+        <ProductImage src={product.images[0]} alt={product.name} />
       )}
 
-      <h2>{product.name}</h2>
-      <p>Kategori: {product.category}</p>
-      <p>Durum: {product.condition}</p>
-      <p>Beden: {product.size}</p>
+      <ProductTitle>{product.name}</ProductTitle>
+      <ProductInfo>Kategori: {product.category}</ProductInfo>
+      <ProductInfo>Durum: {product.condition}</ProductInfo>
+      <ProductInfo>Beden: {product.size}</ProductInfo>
 
-      <button
-        onClick={handleRequest}
-        style={{
-          marginTop: 20,
-          padding: 14,
-          borderRadius: 12,
-          border: "none",
-          background: "#ff8a65",
-          color: "#fff",
-          width: "100%",
-          fontSize: 18,
-          cursor: "pointer",
-        }}
-      >
+      <RequestButton onClick={handleRequest}>
         Ürünü Talep Et
-      </button>
-    </div>
+      </RequestButton>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  padding: 20px;
+`;
+
+const ProductImage = styled.img`
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+`;
+
+const ProductTitle = styled.h2`
+  margin-top: 15px;
+  color: #333;
+`;
+
+const ProductInfo = styled.p`
+  color: #666;
+  margin: 5px 0;
+`;
+
+const RequestButton = styled.button`
+  margin-top: 20px;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #ff8a65;
+  color: #fff;
+  width: 100%;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #e67a5b;
+  }
+`;

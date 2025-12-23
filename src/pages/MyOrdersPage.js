@@ -1,7 +1,7 @@
 // 📦 Siparişlerim Sayfası
 import React, { useEffect, useState } from "react";
 import { collection, query, where, onSnapshot, doc, getDoc } from "firebase/firestore";
-import { db, auth } from "./firebase";
+import { db, auth } from "../firebase";
 
 export default function MyOrdersPage() {
   const [orders, setOrders] = useState([]);

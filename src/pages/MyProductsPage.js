@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
-import { db, auth } from "./firebase";
+import { db, auth } from "../firebase";
 import { FaHeart, FaShoppingCart } from "react-icons/fa";
 
 export default function MyProductsPage({ addToCart, toggleFavorite, favorites = [] }) {

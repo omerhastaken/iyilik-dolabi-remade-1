@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaSave } from "react-icons/fa";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db, auth } from "./firebase"; // <<< EKLEDİK
+import { db, auth } from "../firebase"; // <<< EKLEDİK
 
 export default function AddProductPage() {
   const navigate = useNavigate();

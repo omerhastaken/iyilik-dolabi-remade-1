@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/firestore";
-import { db, auth } from "./firebase";
+import { db, auth } from "../firebase";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 export default function IncomingOrdersPage() {

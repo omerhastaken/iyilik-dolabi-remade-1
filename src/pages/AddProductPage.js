@@ -25,7 +25,6 @@ export default function AddProductPage() {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Simple size check (2MB limit warning)
     if (file.size > 2 * 1024 * 1024) {
       alert("Fotoğraf çok büyük! Lütfen 2MB'dan küçük bir fotoğraf seç.");
       return;
@@ -55,8 +54,8 @@ export default function AddProductPage() {
     try {
       const newProduct = {
         ...formData,
-        price: Number(formData.price), // Ensure price is a number
-        images: images.filter((img) => img !== null), // Remove empty slots
+        price: Number(formData.price),
+        images: images.filter((img) => img !== null),
         createdAt: serverTimestamp(),
         ownerUid: auth.currentUser.uid,
         ownerEmail: auth.currentUser.email,
@@ -91,7 +90,6 @@ export default function AddProductPage() {
       </Header>
 
       <GlassForm>
-        {/* Image Upload Section */}
         <ImageSection>
           <SectionTitle>
             <FaCamera /> Fotoğraflar
@@ -127,8 +125,6 @@ export default function AddProductPage() {
             ℹ️ İpucu: Yatay çekilmiş aydınlık fotoğraflar daha hızlı satılır.
           </InfoNote>
         </ImageSection>
-
-        {/* Details Section */}
         <DetailsSection>
           <SectionTitle>
             <FaTag /> Detaylar
@@ -212,8 +208,6 @@ export default function AddProductPage() {
     </PageContainer>
   );
 }
-
-/* 🎨 SCIFI GLASS STYLES */
 
 const PageContainer = styled.div`
   padding: 40px 20px;
@@ -380,7 +374,7 @@ const GlassSelect = styled.select`
     30,
     30,
     0.9
-  ); /* Darker bg for select dropdown visibility */
+  );
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   color: white;

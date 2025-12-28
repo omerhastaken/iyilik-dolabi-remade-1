@@ -39,8 +39,6 @@ export default function CategoryMenu({ onSelectCategory }) {
     { name: "Okul Malzemeleri", icon: <FaSchool /> },
     { name: "Ev Eşyası", icon: <FaHome /> },
   ];
-
-  // Property to handle CSS variables for animation
   const animationProps = {
       '--x': '0%',
       '--y': '0%'
@@ -102,8 +100,6 @@ export default function CategoryMenu({ onSelectCategory }) {
     </MenuContainer>
   );
 }
-
-// Keyframes for the animation
 const lightMove = keyframes`
   0% { --x: 0%; --y: 0%; }
   25% { --x: 100%; --y: 0%; }
@@ -112,7 +108,6 @@ const lightMove = keyframes`
   100% { --x: 0%; --y: 0%; }
 `;
 
-// Styled Components
 const MenuContainer = styled.div`
   position: relative;
   margin-left: 15px;

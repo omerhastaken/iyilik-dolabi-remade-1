@@ -24,12 +24,9 @@ export default function IncomingOrdersPage() {
   }, []);
 
   const approveOrder = async (order) => {
-    // siparişi onayla
     await updateDoc(doc(db, "orders", order.id), {
       status: "approved"
     });
-
-    // ürünü kilitle
     await updateDoc(doc(db, "products", order.productId), {
       status: "given"
     });

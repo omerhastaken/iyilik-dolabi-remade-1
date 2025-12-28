@@ -74,11 +74,9 @@ export default function SecurityPage() {
   );
 }
 
-/* 🛡️ ULTRA-GLASS SECURITY STYLES */
-
 const PageContainer = styled.div`
   padding: 40px 20px;
-  max-width: 800px; /* Narrower width for focus */
+  max-width: 800px;
   margin: 0 auto;
 `;
 
@@ -108,7 +106,6 @@ const ContentGrid = styled.div`
   gap: 24px;
 `;
 
-/* Status Banner */
 const StatusCard = styled.div`
   display: flex;
   align-items: center;
@@ -151,7 +148,6 @@ const IconWrapper = styled.div`
   box-shadow: 0 0 20px ${(props) => props.$color}60;
 `;
 
-/* Standard Glass Card */
 const GlassCard = styled.div`
   background: linear-gradient(
     135deg,
@@ -195,7 +191,7 @@ const IconBox = styled.div`
 `;
 
 const CardBody = styled.div`
-  padding-left: 55px; /* Aligns with text next to icon */
+  padding-left: 55px;
 
   p {
     margin: 0 0 15px 0;

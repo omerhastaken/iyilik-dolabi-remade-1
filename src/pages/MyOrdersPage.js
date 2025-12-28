@@ -7,8 +7,6 @@ export default function MyOrdersPage({ products }) { // Accept products as prop
 
   useEffect(() => {
     if (!auth.currentUser) return;
-    
-    // Just fetch orders, no need to fetch products inside here anymore!
     const q = query(collection(db, "orders"), where("buyerUid", "==", auth.currentUser.uid));
     const unsub = onSnapshot(q, (snapshot) => {
       setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
@@ -22,7 +20,6 @@ export default function MyOrdersPage({ products }) { // Accept products as prop
       {orders.length === 0 ? <p>Henüz sipariş vermediniz.</p> : (
         <div style={{ display: "grid", gap: 15 }}>
           {orders.map(order => {
-            // Find product from the prop list instantly
             const product = products.find(p => p.id === order.productId) || {};
             
             return (

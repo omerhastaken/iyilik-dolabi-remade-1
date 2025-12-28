@@ -9,7 +9,6 @@ function HomePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showCategories, setShowCategories] = useState(false);
 
-  // Dummy data
   const products = Array.from({ length: 12 }, (_, i) => ({
     id: i + 1,
     name: `Ürün ${i + 1}`,
@@ -35,7 +34,6 @@ function HomePage() {
 
   return (
     <HomeContainer>
-      {/* Ultra-Glass Header */}
       <Header>
         <LogoSection>
           <h1>İyilik Dolabı</h1>
@@ -71,15 +69,12 @@ function HomePage() {
         </NavSection>
       </Header>
 
-      {/* Hero Glass Banner */}
       <Banner>
         <BannerContent>
           <h2>Geleceği Paylaş 🚀</h2>
           <p>En yeni teknoloji, en temiz tasarım.</p>
         </BannerContent>
       </Banner>
-
-      {/* The iOS 26 Product Grid */}
       <ProductGrid>
         {filteredProducts.map((product) => (
           <ProductCard key={product.id}>
@@ -112,15 +107,12 @@ function HomePage() {
 
 export default HomePage;
 
-/* 🔮 ULTRA-GLASS STYLES (iOS 26 Vibe) 🔮 */
 
 const HomeContainer = styled.div`
   padding: 40px 20px;
   max-width: 1200px;
   margin: 0 auto;
 `;
-
-/* Common Glass Mixin for consistency */
 const glassEffect = `
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(24px);
@@ -137,7 +129,6 @@ const Header = styled.header`
   padding: 18px 30px;
   border-radius: 24px;
   margin-bottom: 40px;
-  /* Top lighting effect */
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0.05) 0%,
@@ -251,7 +242,7 @@ const Banner = styled.section`
   position: relative;
   overflow: hidden;
 
-  /* Subtle sheen animation across banner */
+
   &::before {
     content: "";
     position: absolute;
@@ -299,7 +290,6 @@ const ProductGrid = styled.div`
 
 /* 💎 THE PRODUCT CARD */
 const ProductCard = styled.div`
-  /* The Secret Sauce for iOS 26 Look */
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.05) 0%,
@@ -404,8 +394,6 @@ const AddButton = styled.button`
   padding: 14px;
   border-radius: 18px;
   border: none;
-
-  /* Glassy Button Gradient */
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0.1),

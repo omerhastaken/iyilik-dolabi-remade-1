@@ -30,7 +30,6 @@ import HelpPage from "./pages/HelpPage";
 
 function App() {
   const navigate = useNavigate();
-  // 💾 State with LocalStorage Persistence
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem("favorites");
     return saved ? JSON.parse(saved) : [];

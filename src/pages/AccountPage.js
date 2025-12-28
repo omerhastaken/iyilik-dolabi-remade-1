@@ -54,8 +54,6 @@ export default function AccountPage() {
   return (
     <PageContainer>
       <Header>Hesabım</Header>
-
-      {/* Glass User Card */}
       <UserCard>
         <Avatar>
           <FaUser />
@@ -65,8 +63,6 @@ export default function AccountPage() {
           <p className="welcome">Hoş geldin 💛</p>
         </UserInfo>
       </UserCard>
-
-      {/* Glass Grid Menu */}
       <MenuGrid>
         <MenuBox onClick={() => navigate("/my-products")}>
           <IconWrapper>
@@ -125,14 +121,12 @@ export default function AccountPage() {
   );
 }
 
-/* 🎨 STYLED COMPONENTS - Transparent & Glassy */
 
 const PageContainer = styled.div`
   padding: 40px 20px;
   max-width: 800px;
   margin: 0 auto;
   color: #fff;
-  /* No background color here! It lets the body animation show through. */
 `;
 
 const Header = styled.h2`

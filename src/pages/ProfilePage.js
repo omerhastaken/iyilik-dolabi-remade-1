@@ -13,8 +13,6 @@ export default function ProfilePage() {
   });
 
   const handleChange = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
-
-  // Config for fields to loop through
   const fields = [
     { label: "Ad Soyad", icon: <FaUser />, key: "name", type: "text" },
     { label: "E-posta", icon: <FaEnvelope />, key: "email", type: "text", disabled: true },

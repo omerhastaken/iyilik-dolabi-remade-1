@@ -9,7 +9,6 @@ export default function FavoritesPage({
   addToCart,
   products,
 }) {
-  // 📋 Filter the favorites
   const favoriteProducts = products.filter((p) => favorites.includes(p.id));
 
   return (
@@ -32,7 +31,6 @@ export default function FavoritesPage({
           {favoriteProducts.map((product) => (
             <ProductCard key={product.id}>
               <ImageContainer>
-                {/* 🛠️ FIX: Checks for Firebase 'images' array OR dummy 'img' string */}
                 <ProductImage
                   src={
                     product.images?.[0] ||
@@ -67,7 +65,6 @@ export default function FavoritesPage({
   );
 }
 
-/* --- STYLES (Keep exactly the same as before) --- */
 const PageContainer = styled.div`
   padding: 40px 20px;
   max-width: 1200px;

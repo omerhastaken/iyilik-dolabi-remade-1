@@ -29,10 +29,8 @@ export default function CartPage({
     note: "",
   });
 
-  // Filter products that are in the cart
   const cartProducts = products.filter((p) => cart.some((c) => c.id === p.id));
 
-  // Calculate Total Price (if you have prices)
   const totalPrice = cartProducts.reduce((total, product) => {
     const item = cart.find((c) => c.id === product.id);
     return total + (product.price || 0) * (item.quantity || 1);
@@ -91,7 +89,6 @@ export default function CartPage({
       </Header>
 
       <ContentWrapper>
-        {/* LEFT COLUMN: Cart Items */}
         <CartItemsSection>
           {cartProducts.length === 0 ? (
             <EmptyState>
@@ -153,8 +150,6 @@ export default function CartPage({
             })
           )}
         </CartItemsSection>
-
-        {/* RIGHT COLUMN: Summary & Checkout */}
         {cartProducts.length > 0 && (
           <CheckoutSection>
             <SummaryCard>
@@ -235,7 +230,6 @@ export default function CartPage({
   );
 }
 
-/* 🎨 SCIFI GLASS STYLES */
 
 const PageContainer = styled.div`
   padding: 40px 20px;
@@ -289,7 +283,6 @@ const CheckoutSection = styled.div`
   top: 100px;
 `;
 
-/* 💎 The Glass Item Card */
 const GlassCartItem = styled.div`
   display: flex;
   align-items: center;
@@ -391,7 +384,6 @@ const RemoveButton = styled.button`
   }
 `;
 
-/* 🧾 Checkout Card Styles */
 const SummaryCard = styled.div`
   background: rgba(20, 20, 20, 0.6);
   backdrop-filter: blur(30px);

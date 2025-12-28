@@ -1,8 +1,8 @@
-// 🌟 Trendyol Tarzı Hesabım Sayfası
 import React, { useEffect, useState } from "react";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../firebase";
-import { useNavigate, Link } from "react-router-dom";
+import { onAuthStateChanged, signOut, signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../firebase";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import {
   FaBox,
   FaPlusCircle,
@@ -11,7 +11,8 @@ import {
   FaShieldAlt,
   FaUser,
   FaQuestionCircle,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaGoogle,
 } from "react-icons/fa";
 
 export default function AccountPage() {
@@ -23,6 +24,14 @@ export default function AccountPage() {
     return () => unsub();
   }, []);
 
+  const handleLogin = async () => {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
   const handleLogout = async () => {
     await signOut(auth);
     navigate("/");
@@ -30,198 +39,239 @@ export default function AccountPage() {
 
   if (!user) {
     return (
-      <div style={styles.centerBox}>
-        <h2 style={styles.title}>Hesabım</h2>
-        <p style={{ color: "#fff" }}>Devam etmek için giriş yapmanız gerekiyor.</p>
-
-        <Link to="/login" style={styles.loginButton}>
-          Google ile Giriş Yap
-        </Link>
-      </div>
+      <PageContainer>
+        <LoginCard>
+          <h2>Hesabım</h2>
+          <p>Devam etmek için giriş yapmanız gerekiyor.</p>
+          <LoginButton onClick={handleLogin}>
+            <FaGoogle /> Google ile Giriş Yap
+          </LoginButton>
+        </LoginCard>
+      </PageContainer>
     );
   }
 
   return (
-    <div style={styles.page}>
-      {/* Glow Arka Plan */}
-      <div style={styles.glow1}></div>
-      <div style={styles.glow2}></div>
+    <PageContainer>
+      <Header>Hesabım</Header>
 
-      <h2 style={styles.header}>Hesabım</h2>
+      {/* Glass User Card */}
+      <UserCard>
+        <Avatar>
+          <FaUser />
+        </Avatar>
+        <UserInfo>
+          <p className="email">{user.email}</p>
+          <p className="welcome">Hoş geldin 💛</p>
+        </UserInfo>
+      </UserCard>
 
-      {/* Kullanıcı Kartı */}
-      <div style={styles.userCard}>
-        <FaUser size={40} color="#fff" />
-        <div>
-          <p style={styles.userEmail}>{user.email}</p>
-          <p style={styles.userText}>Hoş geldin 💛</p>
-        </div>
-      </div>
-
-      {/* Menü Kutuları */}
-      <div style={styles.menuGrid}>
-
-        {/* Eklediğim Ürünler */}
-        <div style={styles.menuBox} onClick={() => navigate("/my-products")}>
-          <FaBox size={28} color="#ffddb0" />
+      {/* Glass Grid Menu */}
+      <MenuGrid>
+        <MenuBox onClick={() => navigate("/my-products")}>
+          <IconWrapper>
+            <FaBox />
+          </IconWrapper>
           <p>Eklediğim Ürünler</p>
-        </div>
+        </MenuBox>
 
-        {/* Ürün Ekle */}
-        <div style={styles.menuBox} onClick={() => navigate("/add-donation")}>
-          <FaPlusCircle size={28} color="#ffddb0" />
+        <MenuBox onClick={() => navigate("/add-donation")}>
+          <IconWrapper>
+            <FaPlusCircle />
+          </IconWrapper>
           <p>Ürün Ekle</p>
-        </div>
+        </MenuBox>
 
-        {/* Gelen Siparişler */}
-        <div style={styles.menuBox} onClick={() => navigate("/incoming-orders")}>
-          <FaCheckCircle size={28} color="#ffddb0" />
+        <MenuBox onClick={() => navigate("/incoming-orders")}>
+          <IconWrapper>
+            <FaCheckCircle />
+          </IconWrapper>
           <p>Gelen Siparişler</p>
-        </div>
+        </MenuBox>
 
-        {/* Siparişlerim */}
-        <div style={styles.menuBox} onClick={() => navigate("/my-orders")}>
-          <FaListAlt size={28} color="#ffddb0" />
+        <MenuBox onClick={() => navigate("/my-orders")}>
+          <IconWrapper>
+            <FaListAlt />
+          </IconWrapper>
           <p>Tüm Siparişlerim</p>
-        </div>
+        </MenuBox>
 
-        {/* Güvenlik */}
-        <div style={styles.menuBox} onClick={() => navigate("/security")}>
-          <FaShieldAlt size={28} color="#ffddb0" />
+        <MenuBox onClick={() => navigate("/security")}>
+          <IconWrapper>
+            <FaShieldAlt />
+          </IconWrapper>
           <p>Güvenlik</p>
-        </div>
+        </MenuBox>
 
-        {/* Kullanıcı Bilgileri */}
-        <div style={styles.menuBox} onClick={() => navigate("/profile")}>
-          <FaUser size={28} color="#ffddb0" />
+        <MenuBox onClick={() => navigate("/profile")}>
+          <IconWrapper>
+            <FaUser />
+          </IconWrapper>
           <p>Kullanıcı Bilgileri</p>
-        </div>
+        </MenuBox>
 
-        {/* Yardım */}
-        <div style={styles.menuBox} onClick={() => navigate("/help")}>
-          <FaQuestionCircle size={28} color="#ffddb0" />
+        <MenuBox onClick={() => navigate("/help")}>
+          <IconWrapper>
+            <FaQuestionCircle />
+          </IconWrapper>
           <p>Yardım</p>
-        </div>
-      </div>
+        </MenuBox>
+      </MenuGrid>
 
-      {/* Çıkış yap */}
-      <button style={styles.logoutButton} onClick={handleLogout}>
-        <FaSignOutAlt size={18} /> Çıkış Yap
-      </button>
-    </div>
+      <LogoutButton onClick={handleLogout}>
+        <FaSignOutAlt /> Çıkış Yap
+      </LogoutButton>
+    </PageContainer>
   );
 }
 
-/* 🎨 STYLES */
-const styles = {
-  page: {
-    padding: 24,
-    minHeight: "100vh",
-    background: "linear-gradient(145deg, #3c2f28, #1e1a17)",
-    position: "relative",
-    overflow: "hidden",
-    color: "#fff",
-    fontFamily: "Poppins, sans-serif"
-  },
+/* 🎨 STYLED COMPONENTS - Transparent & Glassy */
 
-  glow1: {
-    position: "absolute",
-    width: 250,
-    height: 250,
-    background: "#ffb47d50",
-    borderRadius: "50%",
-    top: "-40px",
-    left: "-40px",
-    filter: "blur(80px)"
-  },
+const PageContainer = styled.div`
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  color: #fff;
+  /* No background color here! It lets the body animation show through. */
+`;
 
-  glow2: {
-    position: "absolute",
-    width: 300,
-    height: 300,
-    background: "#ff8a6550",
-    borderRadius: "50%",
-    bottom: "-50px",
-    right: "-40px",
-    filter: "blur(90px)"
-  },
+const Header = styled.h2`
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+`;
 
-  header: {
-    fontSize: 32,
-    marginBottom: 20,
-    textAlign: "center",
-    fontWeight: "700",
-  },
+const LoginCard = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  padding: 40px;
+  border-radius: 24px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 50px;
 
-  centerBox: {
-    padding: 40,
-    textAlign: "center",
-    background: "#3c2f28",
-    minHeight: "100vh",
-    color: "#fff",
-  },
-
-  loginButton: {
-    marginTop: 20,
-    display: "inline-block",
-    padding: "12px 24px",
-    borderRadius: 12,
-    background: "#ff8a65",
-    color: "#fff",
-    textDecoration: "none",
-    fontSize: 18,
-    fontWeight: 600
-  },
-
-  userCard: {
-    display: "flex",
-    alignItems: "center",
-    gap: 15,
-    padding: 16,
-    background: "rgba(255,255,255,0.08)",
-    borderRadius: 16,
-    marginBottom: 20
-  },
-
-  userEmail: {
-    margin: 0,
-    fontSize: 18,
-    fontWeight: "600"
-  },
-
-  userText: {
-    margin: 0,
-    fontSize: 14,
-    opacity: 0.8
-  },
-
-  menuGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 16,
-    marginTop: 10
-  },
-
-  menuBox: {
-    background: "rgba(255,255,255,0.07)",
-    padding: 20,
-    borderRadius: 16,
-    textAlign: "center",
-    cursor: "pointer",
-    transition: "0.25s",
-    fontWeight: "600"
-  },
-
-  logoutButton: {
-    marginTop: 30,
-    width: "100%",
-    padding: 14,
-    background: "#b34747",
-    borderRadius: 12,
-    border: "none",
-    color: "#fff",
-    fontSize: 18,
-    cursor: "pointer",
-    fontWeight: 700
+  p {
+    opacity: 0.7;
+    margin-bottom: 20px;
   }
-};
+`;
+
+const LoginButton = styled.button`
+  background: #fff;
+  color: #333;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
+const UserCard = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+`;
+
+const Avatar = styled.div`
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
+`;
+
+const UserInfo = styled.div`
+  .email {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+  .welcome {
+    font-size: 14px;
+    opacity: 0.7;
+    margin: 5px 0 0;
+  }
+`;
+
+const MenuGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+`;
+
+const MenuBox = styled.div`
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 25px 15px;
+  border-radius: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  p {
+    margin: 15px 0 0;
+    font-weight: 500;
+    font-size: 14px;
+    opacity: 0.9;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  }
+`;
+
+const IconWrapper = styled.div`
+  font-size: 28px;
+  color: #ffddb0;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 10px rgba(255, 221, 176, 0.3));
+`;
+
+const LogoutButton = styled.button`
+  width: 100%;
+  margin-top: 40px;
+  padding: 16px;
+  background: rgba(255, 71, 87, 0.1);
+  border: 1px solid rgba(255, 71, 87, 0.3);
+  color: #ff4757;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: 0.3s;
+
+  &:hover {
+    background: rgba(255, 71, 87, 0.2);
+    transform: translateY(-2px);
+  }
+`;

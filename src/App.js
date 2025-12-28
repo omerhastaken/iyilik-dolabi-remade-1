@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaHeart, FaShoppingCart, FaHome, FaUser } from "react-icons/fa";
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
+import {
+  FaSearch,
+  FaHeart,
+  FaShoppingCart,
+  FaHome,
+  FaUser,
+} from "react-icons/fa";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+} from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase";
-
-// Components
-import CategoryMenu from "./components/CategoryMenu";
-import LoginPage from "./pages/LoginPage";
 import FavoritesPage from "./pages/FavoritesPage";
 import CartPage from "./CartPage";
 import AccountPage from "./pages/AccountPage";
@@ -20,11 +28,18 @@ import SecurityPage from "./pages/SecurityPage";
 import ProfilePage from "./pages/ProfilePage";
 import HelpPage from "./pages/HelpPage";
 
-
 function App() {
   const navigate = useNavigate();
-  const [favorites, setFavorites] = useState([]);
-  const [cart, setCart] = useState([]);
+  // 💾 State with LocalStorage Persistence
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem("favorites");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [cart, setCart] = useState(() => {
+    const saved = localStorage.getItem("cart");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -36,6 +51,14 @@ function App() {
     });
     return () => unsub();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
 
   const toggleFavorite = (id) => {
     setFavorites((prev) =>
@@ -51,7 +74,9 @@ function App() {
   const updateQuantity = (id, quantity) => {
     setCart((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, quantity: quantity > 0 ? quantity : 1 } : item
+        item.id === id
+          ? { ...item, quantity: quantity > 0 ? quantity : 1 }
+          : item
       )
     );
   };
@@ -71,29 +96,43 @@ function App() {
     <>
       <GlobalStyle />
       <AppContainer>
-        <Navbar>
-          <HeaderLeft>
-            <Logo>İyilik Dolabı</Logo>
-            <CategoryMenu onSelectCategory={(cat) => setSearchTerm(cat === "Tümü" ? "" : cat)} />
-          </HeaderLeft>
+        <HeaderWrapper>
+          <Navbar>
+            <LogoContainer>
+              <Logo>İyilik Dolabı</Logo>
+            </LogoContainer>
 
-          <SearchContainer>
-            <input
-              type="text"
-              placeholder="Ürün ara..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <SearchIcon />
-          </SearchContainer>
+            {/* Search Bar Integration */}
+            <SearchContainer>
+              <input
+                type="text"
+                placeholder="Ürün ara..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <SearchIcon />
+            </SearchContainer>
 
-          <NavLinks>
-            <Link to="/"><FaHome /> Ana Sayfa</Link>
-            <Link to="/cart"><FaShoppingCart /> Sepet ({cart.length})</Link>
-            <Link to="/favorites"><FaHeart /> Favoriler ({favorites.length})</Link>
-            <Link to="/account"><FaUser /> Hesabım</Link>
-          </NavLinks>
-        </Navbar>
+            <NavLinks>
+              <StyledLink to="/">
+                <FaHome /> <span>Ana Sayfa</span>
+              </StyledLink>
+              <StyledLink to="/cart">
+                <FaShoppingCart />
+                <span>Sepet</span>
+                {cart.length > 0 && <Badge>{cart.length}</Badge>}
+              </StyledLink>
+              <StyledLink to="/favorites">
+                <FaHeart />
+                <span>Favoriler</span>
+                {favorites.length > 0 && <Badge>{favorites.length}</Badge>}
+              </StyledLink>
+              <StyledLink to="/account">
+                <FaUser /> <span>Hesabım</span>
+              </StyledLink>
+            </NavLinks>
+          </Navbar>
+        </HeaderWrapper>
 
         <Routes>
           <Route
@@ -101,50 +140,98 @@ function App() {
             element={
               <div>
                 <Banner>
-                  <h2>Bir eşya paylaş, bir kalbi ısıt 💛</h2>
+                  <h2>Bir eşya paylaş, bir kalbi ısıt ♥️</h2>
                   <p>İyilik Dolabı — Paylaşmanın en güzel hali</p>
                 </Banner>
 
-                <section>
+                <Section>
                   <ProductGrid>
                     {filteredProducts.map((product) => (
                       <ProductCard key={product.id}>
-                        <img
-                          src={product.images?.[0]}
-                          alt={product.name}
-                          onClick={() => navigate(`/product/${product.id}`)}
-                        />
-                        <h3>{product.name}</h3>
-                        <p>{product.category} - {product.size}</p>
-                        <p>Durum: {product.condition}</p>
-
-                        <ProductActions>
-                          <button onClick={() => addToCart(product.id)}>Sepete Ekle</button>
+                        <ImageContainer>
+                          <ProductImage
+                            src={
+                              product.images?.[0] ||
+                              "https://via.placeholder.com/300"
+                            }
+                            alt={product.name}
+                            onClick={() => navigate(`/product/${product.id}`)}
+                          />
                           <HeartIcon
                             $active={favorites.includes(product.id)}
                             onClick={() => toggleFavorite(product.id)}
                           />
-                        </ProductActions>
+                        </ImageContainer>
+
+                        <CardContent>
+                          <CardHeader>
+                            <h3
+                              onClick={() => navigate(`/product/${product.id}`)}
+                              style={{ cursor: "pointer" }}
+                            >
+                              {product.name}
+                            </h3>
+                            <PriceTag>
+                              {product.price
+                                ? `${product.price} TL`
+                                : "Ücretsiz"}
+                            </PriceTag>
+                          </CardHeader>
+
+                          <ProductMeta>
+                            {product.category} • {product.size}
+                            <br />
+                            <span style={{ opacity: 0.7 }}>
+                              Durum: {product.condition}
+                            </span>
+                          </ProductMeta>
+
+                          <AddButton onClick={() => addToCart(product.id)}>
+                            Sepete Ekle
+                          </AddButton>
+                        </CardContent>
                       </ProductCard>
                     ))}
                   </ProductGrid>
-                </section>
+                </Section>
               </div>
             }
           />
-          
-          <Route path="/favorites" element={<FavoritesPage favorites={favorites} products={products} toggleFavorite={toggleFavorite} addToCart={addToCart} />} />
-          <Route path="/cart" element={<CartPage cart={cart} products={products} removeFromCart={removeFromCart} updateQuantity={updateQuantity} />} />
+
+          <Route
+            path="/favorites"
+            element={
+              <FavoritesPage
+                favorites={favorites}
+                products={products}
+                toggleFavorite={toggleFavorite}
+                addToCart={addToCart}
+              />
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <CartPage
+                cart={cart}
+                products={products}
+                removeFromCart={removeFromCart}
+                updateQuantity={updateQuantity}
+              />
+            }
+          />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/add-donation" element={<AddProductPage />} />
           <Route path="/product/:id" element={<ProductDetailPage />} />
           <Route path="/my-products" element={<MyProductsPage />} />
           <Route path="/incoming-orders" element={<IncomingOrdersPage />} />
-          <Route path="/my-orders" element={<MyOrdersPage />} />
+          <Route
+            path="/my-orders"
+            element={<MyOrdersPage products={products} />}
+          />
           <Route path="/security" element={<SecurityPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/help" element={<HelpPage />} />
-          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </AppContainer>
     </>
@@ -159,164 +246,299 @@ export default function AppWrapper() {
   );
 }
 
-// 🌍 Global Styles (replaces body styles in App.css)
+/* 🎨 GLOBAL & LAYOUT STYLES */
+
 const GlobalStyle = createGlobalStyle`
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
   body {
     margin: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #fff8f0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #fff;
+    background: linear-gradient(-45deg, #000000, #1a0b0b, #2c1e1e, #0f0f0f);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    min-height: 100vh;
   }
 `;
 
-// 💅 Styled Components
-const AppContainer = styled.div`
-  /* Main container styles if needed */
+const AppContainer = styled.div``;
+const Section = styled.section`
+  padding: 20px;
 `;
 
-const Navbar = styled.header`
+const HeaderWrapper = styled.div`
+  position: sticky;
+  top: 10px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
+  margin-bottom: 20px;
+`;
+
+/* 💎 GLASS NAVBAR */
+const Navbar = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px; 
-  background: linear-gradient(to right, #5b433c, #2f2e2e);
-`;
+  width: 100%;
+  max-width: 1000px;
+  padding: 12px 30px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border-radius: 50px;
+  transition: all 0.3s ease;
 
-const Logo = styled.h1`
-  font-size: 28px;
-  color: #fff;
-  font-weight: bold;
-  margin: 0;
-`;
-
-const HeaderLeft = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const SearchContainer = styled.div`
-  position: relative;
-  flex: 1;
-  max-width: 400px;
-  margin: 0 20px;
-
-  input {
-    width: 100%;
-    padding: 8px 35px 8px 10px;
-    border-radius: 25px;
-    border: none;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    outline: none;
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
   }
 `;
 
-const SearchIcon = styled(FaSearch)`
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #5d4037;
+const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const Logo = styled.h1`
+  font-size: 24px;
+  color: #fff;
+  font-weight: bold;
+  margin: 0;
+  white-space: nowrap;
+  margin-right: 20px;
 `;
 
 const NavLinks = styled.nav`
   display: flex;
   align-items: center;
-
   a {
     margin-left: 20px;
-    text-decoration: none;
+  }
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  transition: all 0.3s;
+  &:hover {
     color: #fff;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    
-    &:hover {
-      opacity: 0.8;
+    transform: translateY(-2px);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+  }
+  svg {
+    font-size: 18px;
+  }
+`;
+
+const SearchContainer = styled.div`
+  position: relative;
+  flex: 1;
+  max-width: 300px;
+  margin: 0 20px;
+  input {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
+    outline: none;
+    transition: 0.3s;
+    &:focus {
+      background: rgba(0, 0, 0, 0.4);
+      border-color: rgba(255, 255, 255, 0.3);
     }
   }
+`;
+const SearchIcon = styled(FaSearch)`
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
 `;
 
 const Banner = styled.section`
   text-align: center;
   padding: 60px 20px;
-  background: linear-gradient(to right, #efebe9, #5d5943);
-  margin: 20px;
-  border-radius: 20px;
-  
+  background: linear-gradient(
+    to right,
+    rgba(123, 3, 35, 0.4),
+    rgba(139, 0, 0, 0.4)
+  );
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 20px auto;
+  max-width: 1000px;
+  border-radius: 32px;
   h2 {
     font-size: 36px;
-    color: #3f2f2a;
+    font-weight: 900;
+    color: #fff;
     margin-bottom: 10px;
   }
-
   p {
     font-size: 18px;
-    color: #6d4c41;
+    color: rgba(255, 255, 255, 0.8);
   }
 `;
+
+/* 🔮 THE UNIFIED GLASS CARD STYLES */
 
 const ProductGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  padding: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
 `;
 
 const ProductCard = styled.div`
-  background: #443c3a;
-  border-radius: 15px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 28px;
   padding: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  transition: transform 0.2s;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 
   &:hover {
-    transform: translateY(-5px);
-  }
-
-  img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-
-  h3 {
-    color: #fff;
-    margin: 10px 0 5px;
-  }
-
-  p {
-    color: #d7ccc8;
-    font-size: 14px;
-    margin: 0 0 5px;
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    border-color: rgba(255, 255, 255, 0.2);
   }
 `;
 
-const ProductActions = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
+const ImageContainer = styled.div`
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  height: 220px;
+  width: 100%;
+`;
 
-  button {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 20px;
-    background-color: #2b2929;
-    color: #fff;
-    cursor: pointer;
-    font-weight: bold;
-
-    &:hover {
-      background-color: #1a1919;
-    }
+const ProductImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s;
+  cursor: pointer;
+  ${ProductCard}:hover & {
+    transform: scale(1.1);
   }
 `;
 
 const HeartIcon = styled(FaHeart)`
-  font-size: 22px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  padding: 8px;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  box-sizing: border-box;
   cursor: pointer;
-  color: ${props => props.$active ? "#63615e" : "#fff"};
-  transition: color 0.2s;
+  color: ${(props) => (props.$active ? "#ff4757" : "rgba(255,255,255,0.7)")};
+  transition: 0.3s;
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+    color: #ff4757;
+  }
+`;
+
+const CardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+`;
+
+const CardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+`;
+
+const PriceTag = styled.span`
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffddb0;
+  white-space: nowrap;
+  text-shadow: 0 0 10px rgba(255, 221, 176, 0.3);
+`;
+
+const ProductMeta = styled.p`
+  font-size: 13px;
+  opacity: 0.6;
+  margin: 0;
+  line-height: 1.4;
+`;
+
+const AddButton = styled.button`
+  margin-top: auto;
+  width: 100%;
+  padding: 12px;
+  border-radius: 16px;
+  border: none;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    background: #fff;
+    color: #000;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  }
+`;
+
+const Badge = styled.span`
+  background: #ff4757;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: -5px;
+  box-shadow: 0 2px 5px rgba(255, 71, 87, 0.4);
 `;

@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { auth } from "../firebase";
-import { FaUser, FaCalendar, FaEnvelope, FaHome, FaPhone } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaHome, FaPhone, FaCalendar } from "react-icons/fa";
 
 export default function ProfilePage() {
   const user = auth.currentUser;
-
   const [form, setForm] = useState({
     name: user?.displayName || "",
     email: user?.email || "",
@@ -13,65 +12,58 @@ export default function ProfilePage() {
     birthday: "",
   });
 
+  const handleChange = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
+
+  // Config for fields to loop through
+  const fields = [
+    { label: "Ad Soyad", icon: <FaUser />, key: "name", type: "text" },
+    { label: "E-posta", icon: <FaEnvelope />, key: "email", type: "text", disabled: true },
+    { label: "Telefon", icon: <FaPhone />, key: "phone", type: "text" },
+    { label: "Adres", icon: <FaHome />, key: "address", type: "textarea" },
+    { label: "Doğum Tarihi", icon: <FaCalendar />, key: "birthday", type: "date" },
+  ];
+
   return (
-    <div style={container}>
-      <h2 style={title}>Kullanıcı Bilgilerim</h2>
-
-      {/* FORM */}
-      <div style={formBox}>
-
-        {/* AD SOYAD */}
-        <label style={label}><FaUser /> Ad Soyad</label>
-        <input
-          style={input}
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-          placeholder="Adınızı girin"
-        />
-
-        {/* E-POSTA */}
-        <label style={label}><FaEnvelope /> E-posta</label>
-        <input
-          style={input}
-          value={form.email}
-          disabled
-        />
-
-        {/* TELEFON */}
-        <label style={label}><FaPhone /> Telefon</label>
-        <input
-          style={input}
-          value={form.phone}
-          onChange={(e) => setForm({ ...form, phone: e.target.value })}
-          placeholder="Telefon numaranız"
-        />
-
-        {/* ADRES */}
-        <label style={label}><FaHome /> Adres</label>
-        <textarea
-          style={textarea}
-          value={form.address}
-          onChange={(e) => setForm({ ...form, address: e.target.value })}
-          placeholder="Adresinizi girin"
-        />
-
-        {/* DOĞUM TARİHİ */}
-        <label style={label}><FaCalendar /> Doğum Tarihi</label>
-        <input
-          type="date"
-          style={input}
-          value={form.birthday}
-          onChange={(e) => setForm({ ...form, birthday: e.target.value })}
-        />
-
-        {/* KAYDET BUTONU */}
-        <button style={saveBtn}>Bilgileri Güncelle</button>
+    <div style={styles.container}>
+      <h2 style={styles.title}>Kullanıcı Bilgilerim</h2>
+      <div style={styles.formBox}>
+        {fields.map(({ label, icon, key, type, disabled }) => (
+          <div key={key}>
+            <label style={styles.label}>{icon} {label}</label>
+            {type === "textarea" ? (
+              <textarea 
+                style={styles.textarea} 
+                value={form[key]} 
+                onChange={(e) => handleChange(key, e.target.value)} 
+              />
+            ) : (
+              <input 
+                type={type} 
+                style={styles.input} 
+                value={form[key]} 
+                disabled={disabled}
+                onChange={(e) => handleChange(key, e.target.value)} 
+              />
+            )}
+          </div>
+        ))}
+        <button style={styles.saveBtn}>Bilgileri Güncelle</button>
       </div>
     </div>
   );
 }
 
 // 🎨 STYLES
+
+const styles = {
+  container: { padding: "30px", maxWidth: "600px", margin: "0 auto", background: "#fdf9f5", borderRadius: "18px" },
+  formBox: { display: "flex", flexDirection: "column", gap: "14px" },
+  label: { fontWeight: "bold", display: "flex", alignItems: "center", gap: "8px", color: "#6e4f33" },
+  input: { padding: "12px", borderRadius: "10px", border: "1px solid #c7b299", width: "100%" },
+  textarea: { padding: "12px", borderRadius: "10px", border: "1px solid #c7b299", width: "100%", height: "80px", resize: "none" },
+  saveBtn: { marginTop: "15px", padding: "14px", borderRadius: "12px", background: "#6b4f3b", color: "white", border: "none", cursor: "pointer" },
+  title: { textAlign: "center", color: "#4b3621" }
+};
 
 const container = {
   padding: "30px",
